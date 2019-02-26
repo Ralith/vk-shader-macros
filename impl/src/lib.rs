@@ -18,8 +18,10 @@ struct IncludeGlsl {
 impl Parse for IncludeGlsl {
     fn parse(input: ParseStream) -> Result<Self> {
         let path_lit = input.parse::<LitStr>()?;
+        let path = Path::new(&env::var("CARGO_MANIFEST_DIR").unwrap()).join(&path_lit.value());
+        let path_str = path.to_string_lossy();
 
-        let sources = RefCell::new(Vec::new());
+        let sources = RefCell::new(vec![path_str.clone().into_owned()]);
         let mut options = shaderc::CompileOptions::new().unwrap();
         options.set_include_callback(|name, ty, src, _depth| {
             let path = match ty {
@@ -64,7 +66,6 @@ impl Parse for IncludeGlsl {
             }
         }
 
-        let path = Path::new(&env::var("CARGO_MANIFEST_DIR").unwrap()).join(&path_lit.value());
         let kind = kind
             .or_else(|| {
                 path.extension()
@@ -72,7 +73,6 @@ impl Parse for IncludeGlsl {
             })
             .unwrap_or(shaderc::ShaderKind::InferFromSource);
         let src = fs::read_to_string(&path).map_err(|e| syn::Error::new(path_lit.span(), e))?;
-        let path_str = path.to_string_lossy();
 
         let mut compiler = shaderc::Compiler::new().unwrap();
         let out = compiler
