@@ -1,5 +1,6 @@
 # vk-shader-macros
 
+[![Documentation](https://docs.rs/vk-shader-macros/badge.svg)](https://docs.rs/vk-shader-macros/)
 [![Crates.io](https://img.shields.io/crates/v/vk-shader-macros.svg)](https://crates.io/crates/vk-shader-macros)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE-MIT)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE-APACHE)
