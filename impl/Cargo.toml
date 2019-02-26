@@ -1,0 +1,18 @@
+[package]
+name = "vk-shader-macros-impl"
+version = "0.1.0"
+authors = ["Benjamin Saunders <ben.e.saunders@gmail.com>"]
+edition = "2018"
+
+[lib]
+proc-macro = true
+
+[features]
+build-native-shaderc = ["shaderc/build-native-shaderc"] # Clone and build the C++ shaderc project
+
+[dependencies]
+syn = { version = "0.15.26", default-features = false, features = [ "parsing", "proc-macro", "derive" ] }
+quote = "0.6.11"
+proc-macro2 = "0.4.27"
+proc-macro-hack = "0.5.4"
+shaderc = { version = "0.3.10", default-features = false }
