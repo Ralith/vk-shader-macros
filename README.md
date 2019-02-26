@@ -18,6 +18,14 @@ const VERT: &[u32] = include_glsl!("shaders/example.vert");
 const FRAG: &[u32] = include_glsl!("shaders/example.glsl", kind: frag, debug);
 ```
 
+## Why `[u32]`?
+
+SPIR-V is a stream of 32-bit words, not bytes, and this is reflected
+in APIs that consume it. In particular, passing a `[u8]` of SPIR-V
+that is not 4-byte-aligned to Vulkan is undefined behavior. Storing
+SPIR-V in its native format guarantees that this will never occur,
+without requiring copying or unsafe code.
+
 ## Dependencies
 
 This crate currently depends on the foreign
