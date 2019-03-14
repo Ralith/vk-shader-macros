@@ -38,6 +38,7 @@ impl Parse for IncludeGlsl {
         options.set_optimization_level(shaderc::OptimizationLevel::Performance);
 
         let mut kind = None;
+        let mut debug = !cfg!(feature = "strip");
 
         while !input.is_empty() {
             input.parse::<Token![,]>()?;
@@ -57,13 +58,31 @@ impl Parse for IncludeGlsl {
                     let x = input.parse::<LitInt>()?;
                     options.set_forced_version_profile(x.value() as u32, shaderc::GlslProfile::None);
                 }
+                "strip" => {
+                    debug = false;
+                }
                 "debug" => {
-                    options.set_generate_debug_info();
+                    debug = true;
+                }
+                "define" => {
+                    input.parse::<Token![:]>()?;
+                    let name = input.parse::<Ident>()?;
+                    let value = if input.peek(Token![,]) {
+                        None
+                    } else {
+                        Some(input.parse::<LitStr>()?.value())
+                    };
+                    
+                    options.add_macro_definition(&name.to_string(), value.as_ref().map(|x| &x[..]));
                 }
                 _ => {
                     return Err(syn::Error::new(key.span(), "unknown shader compile option"));
                 }
             }
+        }
+
+        if debug {
+            options.set_generate_debug_info();
         }
 
         let kind = kind
