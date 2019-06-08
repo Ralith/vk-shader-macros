@@ -1,7 +1,7 @@
 [package]
 name = "vk-shader-macros-impl"
 description = "Implementation detail of vk-shader-macros"
-version = "0.1.2"
+version = "0.2.0"
 authors = ["Benjamin Saunders <ben.e.saunders@gmail.com>"]
 license = "MIT/Apache-2.0"
 edition = "2018"
@@ -10,8 +10,6 @@ edition = "2018"
 proc-macro = true
 
 [features]
-default = ["build-native-shaderc"]
-build-native-shaderc = ["shaderc/build-native-shaderc"] # Clone and build the C++ shaderc project
 strip = []
 
 [dependencies]
@@ -19,4 +17,4 @@ syn = { version = "0.15.26", default-features = false, features = [ "parsing", "
 quote = "0.6.11"
 proc-macro2 = "0.4.27"
 proc-macro-hack = "0.5.4"
-shaderc = { version = "0.3.10", default-features = false }
+shaderc = "0.5"
