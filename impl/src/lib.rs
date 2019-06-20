@@ -35,10 +35,10 @@ impl Parse for IncludeGlsl {
                 content: fs::read_to_string(path).map_err(|x| x.to_string())?,
             })
         });
-        options.set_optimization_level(shaderc::OptimizationLevel::Performance);
 
         let mut kind = None;
         let mut debug = !cfg!(feature = "strip");
+        let mut optimization = shaderc::OptimizationLevel::Performance;
 
         while !input.is_empty() {
             input.parse::<Token![,]>()?;
@@ -75,6 +75,15 @@ impl Parse for IncludeGlsl {
                     
                     options.add_macro_definition(&name.to_string(), value.as_ref().map(|x| &x[..]));
                 }
+                "optimize" => {
+                    input.parse::<Token![:]>()?;
+                    let value = input.parse::<Ident>()?;
+                    if let Some(x) = optimization_level(&value.to_string()) {
+                        optimization = x;
+                    } else {
+                        return Err(syn::Error::new(value.span(), "unknown optimization level"));
+                    }
+                }
                 _ => {
                     return Err(syn::Error::new(key.span(), "unknown shader compile option"));
                 }
@@ -84,6 +93,8 @@ impl Parse for IncludeGlsl {
         if debug {
             options.set_generate_debug_info();
         }
+
+        options.set_optimization_level(optimization);
 
         let kind = kind
             .or_else(|| {
@@ -134,4 +145,13 @@ fn extension_kind(ext: &str) -> Option<shaderc::ShaderKind> {
             return None;
         }
     })
+}
+
+fn optimization_level(level: &str) -> Option<shaderc::OptimizationLevel> {
+    match level {
+        "zero" => Some(shaderc::OptimizationLevel::Zero),
+        "size" => Some(shaderc::OptimizationLevel::Size),
+        "performance" => Some(shaderc::OptimizationLevel::Performance),
+        _ => None,
+    }
 }
