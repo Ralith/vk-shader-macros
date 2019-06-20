@@ -2,7 +2,7 @@
 name = "vk-shader-macros"
 description = "Procedural macros for working with Vulkan shaders"
 repository = "https://github.com/Ralith/vk-shader-macros"
-version = "0.2.0"
+version = "0.2.1"
 authors = ["Benjamin Saunders <ben.e.saunders@gmail.com>"]
 license = "MIT/Apache-2.0"
 edition = "2018"
@@ -17,7 +17,7 @@ maintenance = { status = "actively-developed" }
 strip = ["vk-shader-macros-impl/strip"] # Omit debug info from generated SPIR-V by default
 
 [dependencies]
-vk-shader-macros-impl = { path = "impl", version = "0.2.0" }
+vk-shader-macros-impl = { path = "impl", version = "0.2.1" }
 proc-macro-hack = "0.5.4"
 
 [workspace]
