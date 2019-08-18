@@ -56,7 +56,7 @@ impl Parse for IncludeGlsl {
                 "version" => {
                     input.parse::<Token![:]>()?;
                     let x = input.parse::<LitInt>()?;
-                    options.set_forced_version_profile(x.value() as u32, shaderc::GlslProfile::None);
+                    options.set_forced_version_profile(x.base10_parse::<u32>()?, shaderc::GlslProfile::None);
                 }
                 "strip" => {
                     debug = false;

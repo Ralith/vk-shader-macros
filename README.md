@@ -33,9 +33,11 @@ without requiring copying or unsafe code.
 
 This crate currently depends on the foreign
 [shaderc](https://github.com/google/shaderc/) library. By default, it
-will be compiled automatically, requiring git, cmake, python 3, and a
-supported C++ compiler to be available in the build environment. A
-pre-compiled shaderc can be used by disabling the crate's default
-features, but care must be taken to use a version that is
-binary-compatible with the one checked out by [the shaderc
-crate](https://github.com/google/shaderc-rs).
+will attempt to use an installed shaderc library. However if it does
+not exist, it will fall back to building from source, requiring git,
+cmake, python 3, and a supported C++ compiler to be available in the
+build environment. When using a pre-compiled shaderc, care must be
+taken to use a version that is binary-compatible with the one checked
+out by [the shaderc crate](https://github.com/google/shaderc-rs).
+You can force shaderc to be built from source by enabling the
+`build-from-source` feature on vk-shader-macros.
