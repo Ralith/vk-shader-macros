@@ -15,6 +15,7 @@ maintenance = { status = "actively-developed" }
 
 [features]
 strip = ["vk-shader-macros-impl/strip"] # Omit debug info from generated SPIR-V by default
+build-from-source = ["vk-shader-macros-impl/build-from-source"] # Force shaderc to be built from source
 
 [dependencies]
 vk-shader-macros-impl = { path = "impl", version = "0.2.1" }

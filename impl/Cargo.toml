@@ -11,10 +11,11 @@ proc-macro = true
 
 [features]
 strip = []
+build-from-source = ["shaderc/build-from-source"]
 
 [dependencies]
-syn = { version = "0.15.26", default-features = false, features = [ "parsing", "proc-macro", "derive" ] }
-quote = "0.6.11"
-proc-macro2 = "0.4.27"
+syn = { version = "1.0.2", default-features = false, features = [ "parsing", "proc-macro", "derive" ] }
+quote = "1.0.1"
+proc-macro2 = "1.0.1"
 proc-macro-hack = "0.5.4"
-shaderc = "0.5"
+shaderc = "0.6.1"
