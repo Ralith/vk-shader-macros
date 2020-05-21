@@ -1,14 +1,14 @@
 extern crate proc_macro;
 
-use std::{env, fs, str, mem};
-use std::path::Path;
 use std::cell::RefCell;
+use std::path::Path;
+use std::{env, fs, mem, str};
 
 use proc_macro::TokenStream;
 use proc_macro_hack::proc_macro_hack;
 use quote::quote;
 use syn::parse::{Parse, ParseStream, Result};
-use syn::{parse_macro_input, Ident, LitStr, LitInt, Token};
+use syn::{parse_macro_input, Ident, LitInt, LitStr, Token};
 
 struct IncludeGlsl {
     sources: Vec<String>,
@@ -58,7 +58,10 @@ impl Parse for IncludeGlsl {
                 "version" => {
                     input.parse::<Token![:]>()?;
                     let x = input.parse::<LitInt>()?;
-                    options.set_forced_version_profile(x.base10_parse::<u32>()?, shaderc::GlslProfile::None);
+                    options.set_forced_version_profile(
+                        x.base10_parse::<u32>()?,
+                        shaderc::GlslProfile::None,
+                    );
                 }
                 "strip" => {
                     debug = false;
@@ -74,7 +77,7 @@ impl Parse for IncludeGlsl {
                     } else {
                         Some(input.parse::<LitStr>()?.value())
                     };
-                    
+
                     options.add_macro_definition(&name.to_string(), value.as_ref().map(|x| &x[..]));
                 }
                 "optimize" => {
