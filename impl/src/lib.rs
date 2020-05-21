@@ -26,7 +26,9 @@ impl Parse for IncludeGlsl {
         options.set_include_callback(|name, ty, src, _depth| {
             let path = match ty {
                 shaderc::IncludeType::Relative => Path::new(src).parent().unwrap().join(name),
-                shaderc::IncludeType::Standard => Path::new(env!("CARGO_MANIFEST_DIR")).join(name),
+                shaderc::IncludeType::Standard => {
+                    Path::new(&env::var("CARGO_MANIFEST_DIR").unwrap()).join(name)
+                }
             };
             let path_str = path.to_str().ok_or("non-unicode path")?.to_owned();
             sources.borrow_mut().push(path_str.clone());
