@@ -40,7 +40,11 @@ impl Parse for IncludeGlsl {
 
         let mut kind = None;
         let mut debug = !cfg!(feature = "strip");
-        let mut optimization = shaderc::OptimizationLevel::Performance;
+        let mut optimization = if cfg!(feature = "default-optimize-zero") {
+            shaderc::OptimizationLevel::Zero
+        } else {
+            shaderc::OptimizationLevel::Performance
+        };
 
         while !input.is_empty() {
             input.parse::<Token![,]>()?;

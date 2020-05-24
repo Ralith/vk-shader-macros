@@ -15,6 +15,7 @@ maintenance = { status = "actively-developed" }
 
 [features]
 strip = ["vk-shader-macros-impl/strip"] # Omit debug info from generated SPIR-V by default
+default-optimize-zero = ["vk-shader-macros-impl/default-optimize-zero"] # Set default optimization level to zero for debugging
 build-from-source = ["vk-shader-macros-impl/build-from-source"] # Force shaderc to be built from source
 
 [dependencies]

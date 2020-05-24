@@ -11,6 +11,7 @@ proc-macro = true
 
 [features]
 strip = []
+default-optimize-zero = []
 build-from-source = ["shaderc/build-from-source"]
 
 [dependencies]
