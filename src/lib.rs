@@ -22,6 +22,8 @@ use proc_macro_hack::proc_macro_hack;
 /// - `define: <name> ["value"]` - Define the preprocessor macro `<name>` as `value`
 /// - `optimize: <level>` - Specify optimization level. Supported values are: `zero`, `size`, and
 ///   `performance`.  If omitted, will default to `performance`.
+/// - `target: <target>` - Specify target environment. Supported values: `vulkan1_0`, `vulkan1_1`,
+///   `vulkan1_2`. Defaults to `vulkan1_0`.
 #[proc_macro_hack]
 pub use vk_shader_macros_impl::include_glsl;
 
@@ -30,5 +32,5 @@ mod tests {
     use super::*;
 
     #[allow(dead_code)]
-    const TEST: &[u32] = include_glsl!("example.vert", version: 450, optimize: size);
+    const TEST: &[u32] = include_glsl!("example.vert", version: 450, optimize: size, target: vulkan1_1);
 }
