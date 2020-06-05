@@ -21,7 +21,7 @@ use proc_macro_hack::proc_macro_hack;
 /// - `debug` - Force debug info, even with the `strip` feature enabled
 /// - `define: <name> ["value"]` - Define the preprocessor macro `<name>` as `value`
 /// - `optimize: <level>` - Specify optimization level. Supported values are: `zero`, `size`, and
-///   `performance`.  If omitted, will default to `performace`.
+///   `performance`.  If omitted, will default to `performance`.
 #[proc_macro_hack]
 pub use vk_shader_macros_impl::include_glsl;
 
