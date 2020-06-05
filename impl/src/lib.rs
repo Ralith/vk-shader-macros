@@ -46,6 +46,8 @@ impl Parse for IncludeGlsl {
             shaderc::OptimizationLevel::Performance
         };
 
+        let mut target_version = 1 << 22;
+
         while !input.is_empty() {
             input.parse::<Token![,]>()?;
             let key = input.parse::<Ident>()?;
@@ -93,6 +95,15 @@ impl Parse for IncludeGlsl {
                         return Err(syn::Error::new(value.span(), "unknown optimization level"));
                     }
                 }
+                "target" => {
+                    input.parse::<Token![:]>()?;
+                    let value = input.parse::<Ident>()?;
+                    if let Some(version) = target(&value.to_string()) {
+                        target_version = version;
+                    } else {
+                        return Err(syn::Error::new(value.span(), "unknown target"));
+                    }
+                }
                 _ => {
                     return Err(syn::Error::new(key.span(), "unknown shader compile option"));
                 }
@@ -104,6 +115,7 @@ impl Parse for IncludeGlsl {
         }
 
         options.set_optimization_level(optimization);
+        options.set_target_env(shaderc::TargetEnv::Vulkan, target_version);
 
         let kind = kind
             .or_else(|| {
@@ -163,4 +175,13 @@ fn optimization_level(level: &str) -> Option<shaderc::OptimizationLevel> {
         "performance" => Some(shaderc::OptimizationLevel::Performance),
         _ => None,
     }
+}
+
+fn target(s: &str) -> Option<u32> {
+    Some(match s {
+        "vulkan" | "vulkan1_0" => 1 << 22,
+        "vulkan1_1" => 1 << 22 | 1 << 12,
+        "vulkan1_2" => 1 << 22 | 2 << 12,
+        _ => return None,
+    })
 }
