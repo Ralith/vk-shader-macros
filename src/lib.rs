@@ -13,8 +13,9 @@ use proc_macro_hack::proc_macro_hack;
 ///
 /// Compile options may be specified as additional arguments. Supported options include:
 /// - `kind: <kind>` - Specify shader kind. Valid kinds are the same as the recognized file
-///    extensions: `vert`, `frag`, `comp`, `geom`, `tesc`, and `tese`. If omitted, kind is inferred
-///    from the file's extension, or a pragma in the source.
+///    extensions: `vert`, `frag`, `comp`, `geom`, `tesc`, `tese`, `spvasm`, `rgen`, `rahit`,
+///    `rchit`, `rmiss`, `rint`, `rcall`, `task`, and `mesh`. If omitted, kind is inferred from the
+///    file's extension, or a pragma in the source.
 /// - `version: <version>` - Specify GLSL version. If omitted, version must be specified in the
 ///    source with `#version`
 /// - `strip` - Omit debug info (set as default by enabling the `strip` feature)

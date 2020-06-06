@@ -162,6 +162,15 @@ fn extension_kind(ext: &str) -> Option<shaderc::ShaderKind> {
         "geom" => Geometry,
         "tesc" => TessControl,
         "tese" => TessEvaluation,
+        "spvasm" => SpirvAssembly,
+        "rgen" => RayGeneration,
+        "rahit" => AnyHit,
+        "rchit" => ClosestHit,
+        "rmiss" => Miss,
+        "rint" => Intersection,
+        "rcall" => Callable,
+        "task" => Task,
+        "mesh" => Mesh,
         _ => {
             return None;
         }
