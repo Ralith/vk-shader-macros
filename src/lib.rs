@@ -110,24 +110,15 @@ pub fn include_glsl(tokens: TokenStream) -> TokenStream {
 /// };
 /// ```
 ///
-/// # Limitations
+/// Because the shader kind cannot be inferred from a file extension,
+/// you may need to specify it manually as the above example does or
+/// add it to the source code, e.g. `#pragma shader_stage(vertex)`.
 ///
-/// - Because the shader kind cannot be inferred from a file extension,
-///   you may need to specify it manually as the above example does.
-/// - Due to limitations of proc macros, relative includes cannot be resolved
-///   relative to the macro invocation. Standard includes must be used instead:
+/// Due to limitations of proc macros, includes are resolved relative to the crate root.
 ///
-///   ```glsl
-///   // standard
-///   #include <crate/to/include.glsl>
+/// # Options
 ///
-///   // v.s. relative
-///   #include "include.glsl"
-///   ```
-///
-/// # See also
-///
-/// See the [`include_glsl!`] macro for a list of compile options and other information.
+/// See the [`include_glsl!`] macro for a list of compile options.
 #[proc_macro]
 pub fn glsl(tokens: TokenStream) -> TokenStream {
     let Glsl(output) = parse_macro_input!(tokens as Glsl);
