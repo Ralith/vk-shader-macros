@@ -45,6 +45,10 @@ impl Parse for Glsl {
     fn parse(input: ParseStream) -> Result<Self> {
         let options = input.parse::<BuildOptions>()?;
 
+        if options.unterminated {
+            input.parse::<Token![,]>()?;
+        }
+
         let src_lit = input.parse::<LitStr>()?;
         let src = src_lit.value();
 
