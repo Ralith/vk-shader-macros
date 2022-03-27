@@ -56,69 +56,77 @@ impl Default for BuildOptions {
 impl Parse for BuildOptions {
     fn parse(input: ParseStream) -> Result<Self> {
         let mut out = Self::default();
+
         while !input.is_empty() {
-            let key = input.parse::<Ident>()?;
-            match &key.to_string()[..] {
-                "kind" => {
-                    input.parse::<Token![:]>()?;
+            if input.peek(Ident) {
+                let key = input.parse::<Ident>()?;
+                match key.to_string().as_str() {
+                    "kind" => {
+                        input.parse::<Token![:]>()?;
 
-                    let value = input.parse::<Ident>()?;
-                    if let Some(kind) = extension_kind(&value.to_string()) {
-                        out.kind = Some(kind);
-                    } else {
-                        return Err(syn::Error::new(value.span(), "unknown shader kind"));
+                        let value = input.parse::<Ident>()?;
+                        if let Some(kind) = extension_kind(&value.to_string()) {
+                            out.kind = Some(kind);
+                        } else {
+                            return Err(syn::Error::new(value.span(), "unknown shader kind"));
+                        }
+                    }
+                    "version" => {
+                        input.parse::<Token![:]>()?;
+
+                        let value = input.parse::<LitInt>()?;
+                        out.version = Some(value.base10_parse()?);
+                    }
+                    "strip" => {
+                        out.debug = false;
+                    }
+                    "debug" => {
+                        out.debug = true;
+                    }
+                    "define" => {
+                        input.parse::<Token![:]>()?;
+
+                        let name = input.parse::<Ident>()?;
+                        let value = if input.peek(Token![,]) {
+                            None
+                        } else {
+                            Some(input.parse::<LitStr>()?.value())
+                        };
+                        out.definitions.push((name.to_string(), value));
+                    }
+                    "optimize" => {
+                        input.parse::<Token![:]>()?;
+
+                        let value = input.parse::<Ident>()?;
+                        if let Some(level) = optimization_level(&value.to_string()) {
+                            out.optimization = level;
+                        } else {
+                            return Err(syn::Error::new(
+                                value.span(),
+                                "unknown optimization level",
+                            ));
+                        }
+                    }
+                    "target" => {
+                        input.parse::<Token![:]>()?;
+
+                        let value = input.parse::<Ident>()?;
+                        if let Some(version) = target(&value.to_string()) {
+                            out.target_version = version;
+                        } else {
+                            return Err(syn::Error::new(value.span(), "unknown target"));
+                        }
+                    }
+                    _ => {
+                        return Err(syn::Error::new(key.span(), "unknown shader compile option"));
                     }
                 }
-                "version" => {
-                    input.parse::<Token![:]>()?;
 
-                    let value = input.parse::<LitInt>()?;
-                    out.version = Some(value.base10_parse()?);
+                if input.peek(Token![,]) {
+                    input.parse::<Token![,]>()?;
+                } else {
+                    break;
                 }
-                "strip" => {
-                    out.debug = false;
-                }
-                "debug" => {
-                    out.debug = true;
-                }
-                "define" => {
-                    input.parse::<Token![:]>()?;
-
-                    let name = input.parse::<Ident>()?;
-                    let value = if input.peek(Token![,]) {
-                        None
-                    } else {
-                        Some(input.parse::<LitStr>()?.value())
-                    };
-                    out.definitions.push((name.to_string(), value));
-                }
-                "optimize" => {
-                    input.parse::<Token![:]>()?;
-
-                    let value = input.parse::<Ident>()?;
-                    if let Some(level) = optimization_level(&value.to_string()) {
-                        out.optimization = level;
-                    } else {
-                        return Err(syn::Error::new(value.span(), "unknown optimization level"));
-                    }
-                }
-                "target" => {
-                    input.parse::<Token![:]>()?;
-
-                    let value = input.parse::<Ident>()?;
-                    if let Some(version) = target(&value.to_string()) {
-                        out.target_version = version;
-                    } else {
-                        return Err(syn::Error::new(value.span(), "unknown target"));
-                    }
-                }
-                _ => {
-                    return Err(syn::Error::new(key.span(), "unknown shader compile option"));
-                }
-            }
-
-            if input.peek(Token![,]) {
-                input.parse::<Token![,]>()?;
             } else {
                 break;
             }

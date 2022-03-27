@@ -45,10 +45,12 @@ impl Parse for Glsl {
     fn parse(input: ParseStream) -> Result<Self> {
         let options = input.parse::<BuildOptions>()?;
 
-        input.parse::<Token![;]>()?;
-
         let src_lit = input.parse::<LitStr>()?;
         let src = src_lit.value();
+
+        if input.peek(Token![,]) {
+            input.parse::<Token![,]>()?;
+        }
 
         let builder = Builder {
             src,
@@ -97,7 +99,7 @@ pub fn include_glsl(tokens: TokenStream) -> TokenStream {
 /// ```
 /// use vk_shader_macros::glsl;
 /// const VERT: &[u32] = glsl! {
-///     version: 450, kind: vert, optimize: size, target: vulkan1_1;
+///     version: 450, kind: vert, optimize: size, target: vulkan1_1,
 ///     r#"
 /// #version 450
 ///
