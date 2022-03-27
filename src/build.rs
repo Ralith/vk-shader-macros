@@ -34,6 +34,8 @@ pub struct BuildOptions {
     pub definitions: Vec<(String, Option<String>)>,
     pub optimization: shaderc::OptimizationLevel,
     pub target_version: u32,
+
+    pub unterminated: bool,
 }
 
 impl Default for BuildOptions {
@@ -49,6 +51,7 @@ impl Default for BuildOptions {
                 shaderc::OptimizationLevel::Performance
             },
             target_version: 1 << 22,
+            unterminated: false,
         }
     }
 }
@@ -56,9 +59,10 @@ impl Default for BuildOptions {
 impl Parse for BuildOptions {
     fn parse(input: ParseStream) -> Result<Self> {
         let mut out = Self::default();
-        while !input.is_empty() {
+
+        while input.peek(Ident) {
             let key = input.parse::<Ident>()?;
-            match &key.to_string()[..] {
+            match key.to_string().as_str() {
                 "kind" => {
                     input.parse::<Token![:]>()?;
 
@@ -120,6 +124,7 @@ impl Parse for BuildOptions {
             if input.peek(Token![,]) {
                 input.parse::<Token![,]>()?;
             } else {
+                out.unterminated = true;
                 break;
             }
         }

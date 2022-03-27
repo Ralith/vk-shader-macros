@@ -39,6 +39,34 @@ impl Parse for IncludeGlsl {
     }
 }
 
+struct Glsl(Output);
+
+impl Parse for Glsl {
+    fn parse(input: ParseStream) -> Result<Self> {
+        let options = input.parse::<BuildOptions>()?;
+
+        if options.unterminated {
+            input.parse::<Token![,]>()?;
+        }
+
+        let src_lit = input.parse::<LitStr>()?;
+        let src = src_lit.value();
+
+        if input.peek(Token![,]) {
+            input.parse::<Token![,]>()?;
+        }
+
+        let builder = Builder {
+            src,
+            name: "inline".to_owned(),
+            path: None,
+            span: src_lit.span(),
+            options,
+        };
+        builder.build().map(Self)
+    }
+}
+
 /// Compile a GLSL source file into a binary SPIR-V constant
 ///
 /// ```
@@ -67,5 +95,36 @@ impl Parse for IncludeGlsl {
 #[proc_macro]
 pub fn include_glsl(tokens: TokenStream) -> TokenStream {
     let IncludeGlsl(output) = parse_macro_input!(tokens as IncludeGlsl);
+    output.expand()
+}
+
+/// Compile inline GLSL source
+///
+/// ```
+/// use vk_shader_macros::glsl;
+/// const VERT: &[u32] = glsl! {
+///     version: 450, kind: vert, optimize: size, target: vulkan1_1,
+///     r#"
+/// #version 450
+///
+/// void main() {
+///     gl_Position = vec4(0);
+/// }
+/// "#
+/// };
+/// ```
+///
+/// Because the shader kind cannot be inferred from a file extension,
+/// you may need to specify it manually as the above example does or
+/// add it to the source code, e.g. `#pragma shader_stage(vertex)`.
+///
+/// Due to limitations of proc macros, includes are resolved relative to the crate root.
+///
+/// # Options
+///
+/// See the [`include_glsl!`] macro for a list of compile options.
+#[proc_macro]
+pub fn glsl(tokens: TokenStream) -> TokenStream {
+    let Glsl(output) = parse_macro_input!(tokens as Glsl);
     output.expand()
 }
