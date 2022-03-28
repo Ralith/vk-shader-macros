@@ -2,7 +2,7 @@
 name = "vk-shader-macros"
 description = "Procedural macros for working with Vulkan shaders"
 repository = "https://github.com/Ralith/vk-shader-macros"
-version = "0.2.7"
+version = "0.2.8"
 authors = ["Benjamin Saunders <ben.e.saunders@gmail.com>"]
 license = "MIT/Apache-2.0"
 edition = "2018"
