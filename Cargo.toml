@@ -25,4 +25,5 @@ build-from-source = ["shaderc/build-from-source"] # Force shaderc to be built fr
 syn = { version = "2.0", default-features = false, features = [ "parsing", "proc-macro", "derive" ] }
 quote = "1.0.17"
 proc-macro2 = "1.0.36"
+# `prefer-static-linking` avoids errors when using the proc macro with rust-analyzer.
 shaderc = { version = "0.8.3", features = ["prefer-static-linking"] }
