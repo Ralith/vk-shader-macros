@@ -191,7 +191,7 @@ impl Builder {
             })
             .unwrap_or(shaderc::ShaderKind::InferFromSource);
 
-        let mut compiler = shaderc::Compiler::new().unwrap();
+        let compiler = shaderc::Compiler::new().unwrap();
         let out = compiler
             .compile_into_spirv(&src, kind, &src_name, "main", Some(&options))
             .map_err(|e| syn::Error::new(src_span, e))?;
