@@ -184,9 +184,25 @@ impl Builder {
         let kind = build_options
             .kind
             .or_else(|| {
-                src_path.and_then(|x| {
-                    x.extension()
-                        .and_then(|x| x.to_str().and_then(extension_kind))
+                src_path.and_then(|full_path| {
+                    full_path
+                        .extension()
+                        .and_then(std::ffi::OsStr::to_str)
+                        .and_then(|last_extension| {
+                            extension_kind(last_extension).or_else(|| {
+                                if last_extension == "glsl" {
+                                    // check to see if the second to last extension exists, and is
+                                    // one of the known shader stage extensions
+                                    full_path
+                                        .file_stem()
+                                        .and_then(|stem| std::path::Path::new(stem).extension())
+                                        .and_then(std::ffi::OsStr::to_str)
+                                        .and_then(extension_kind)
+                                } else {
+                                    None
+                                }
+                            })
+                        })
                 })
             })
             .unwrap_or(shaderc::ShaderKind::InferFromSource);
