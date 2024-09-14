@@ -91,7 +91,7 @@ impl Parse for Glsl {
 /// - `optimize: <level>` - Specify optimization level. Supported values are: `zero`, `size`, and
 ///   `performance`.  If omitted, will default to `performance`.
 /// - `target: <target>` - Specify target environment. Supported values: `vulkan1_0`, `vulkan1_1`,
-///   `vulkan1_2`. Defaults to `vulkan1_0`.
+///   `vulkan1_2`, `vulkan1_3`. Defaults to `vulkan1_0`.
 #[proc_macro]
 pub fn include_glsl(tokens: TokenStream) -> TokenStream {
     let IncludeGlsl(output) = parse_macro_input!(tokens as IncludeGlsl);
