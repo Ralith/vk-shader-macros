@@ -245,6 +245,7 @@ fn target(s: &str) -> Option<u32> {
         "vulkan" | "vulkan1_0" => 1 << 22,
         "vulkan1_1" => 1 << 22 | 1 << 12,
         "vulkan1_2" => 1 << 22 | 2 << 12,
+        "vulkan1_3" => 1 << 22 | 3 << 12,
         _ => return None,
     })
 }
